@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\User;
 use App\Models\Product;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Spatie\Permission\Models\Permission;
@@ -22,23 +21,19 @@ class DatabaseSeeder extends Seeder
     {
         app(PermissionRegistrar::class)->forgetCachedPermissions();
 
-       // Utilisateur "admin"
-        $admin = User::updateOrCreate(
-            ['email' => 'admin@example.com'],
-            [
-                'name' => 'Admin',
-                'password' => Hash::make('password'),
-            ]
-        );
+        // Utilisateur "admin"
+        $admin = User::factory()->create([
+            'name' => 'Admin',
+            'email' => 'admin@example.com',
+            'password' => bcrypt('password'),
+        ]);
 
         // Utilisateur "user"
-        $user = User::updateOrCreate(
-            ['email' => 'user@example.com'],
-            [
-                'name' => 'User',
-                'password' => Hash::make('password'),
-            ]
-        );
+        $user = User::factory()->create([
+            'name' => 'User',
+            'email' => 'user@example.com',
+            'password' => bcrypt('password'),
+        ]);
 
         $adminRole = Role::firstOrCreate(['name' => 'admin']);
         $viewDashboard = Permission::firstOrCreate(['name' => 'view dashboard']);
@@ -46,14 +41,14 @@ class DatabaseSeeder extends Seeder
         $admin->assignRole($adminRole);
 
         // Produits de l'admin
-        if (! Product::where('user_id', $admin->id)->exists()) {
+        if (!Product::where('user_id', $admin->id)->exists()) {
             Product::factory()->count(3)->create([
                 'user_id' => $admin->id,
             ]);
         }
 
         // Produits de l'utilisateur simple
-        if (! Product::where('user_id', $user->id)->exists()) {
+        if (!Product::where('user_id', $user->id)->exists()) {
             Product::factory()->count(3)->create([
                 'user_id' => $user->id,
             ]);
