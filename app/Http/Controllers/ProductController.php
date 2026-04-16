@@ -39,16 +39,16 @@ class ProductController extends Controller
 
         // Validation basique
         $validated = $request->validate([
-            'name'  => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255'],
             'price' => ['required', 'numeric', 'min:0'],
         ]);
 
         // Création du produit pour l'utilisateur connecté
         Product::create([
-            'name'     => $validated['name'],
-            'price'    => $validated['price'],
-            'user_id'  => $request->user()->id,
-            'is_public'=> $request->has('is_public'),
+            'name' => $validated['name'],
+            'price' => $validated['price'],
+            'user_id' => $request->user()->id,
+            'is_public' => $request->has('is_public'),
         ]);
 
         return redirect()
@@ -79,18 +79,18 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request,  Product $product)
+    public function update(Request $request, Product $product)
     {
         Gate::authorize('update', $product);
 
         $validated = $request->validate([
-            'name'  => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255'],
             'price' => ['required', 'numeric', 'min:0'],
         ]);
 
         $product->update([
-            'name'      => $validated['name'],
-            'price'     => $validated['price'],
+            'name' => $validated['name'],
+            'price' => $validated['price'],
             'is_public' => $request->has('is_public'),
         ]);
 

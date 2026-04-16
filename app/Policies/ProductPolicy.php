@@ -7,6 +7,11 @@ use App\Models\User;
 
 class ProductPolicy
 {
+    public function before(User $user, string $ability): ?bool
+    {
+        return $user->hasRole('admin') ? true : null;
+    }
+
     /**
      * Determine whether the user can view any models.
      */
